@@ -69,16 +69,18 @@ string memory_usage() {
 }
 
 void indent(int level, string str) {
-    for (int i = 0; i < level; i++)
-        cout << "   ";
-    cout << "(" << level << ") ";
+  for (int i = 0; i < level; i++) {
+    // cout << "   ";
+  }
+  // cout << "(" << level << ") ";
 }
 
 void print_max_clique(vector<int>& C) {
-    cout << "Maximum clique: ";
-    for(int i = 0; i < C.size(); i++)
-        cout << C[i] + 1 << " ";
-    cout << endl;
+  // cout << "Maximum clique: ";
+  for (int i = 0; i < C.size(); i++) {
+    // cout << C[i] + 1 << " ";
+  }
+  // cout << endl;
 }
 
 void print_n_maxcliques(set< vector<int> > C, int n) {
@@ -86,12 +88,14 @@ void print_n_maxcliques(set< vector<int> > C, int n) {
     int mc = 0;
     for( it = C.begin(); it != C.end(); it++) {
         if (mc < n) {
-            cout << "Maximum clique: ";
-            const vector<int>& clq = (*it);
-            for (int j = 0; j < clq.size(); j++)
-                cout << clq[j] << " ";
-            cout <<endl;
-            ++mc;
+          // cout << "Maximum clique: ";
+          const vector<int> &clq = (*it);
+          for (int j = 0; j < clq.size(); j++) {
+            // cout << clq[j] << " ";
+          }
+
+          // cout <<endl;
+          ++mc;
         }
         else break;
     }
@@ -100,8 +104,8 @@ void print_n_maxcliques(set< vector<int> > C, int n) {
 
 void validate(bool condition, const string& msg) {
     if (!condition) {
-        cerr << msg << endl;
-        assert(condition);
+      // cerr << msg << endl;
+      assert(condition);
     }
 }
 
@@ -109,8 +113,8 @@ int getdir (string dir, vector<string> &files) {
     DIR *dp;
     struct dirent *dirp;
     if((dp  = opendir(dir.c_str())) == NULL) {
-        cout << "Error(" << errno << ") opening " << dir << endl;
-        return errno;
+      // cout << "Error(" << errno << ") opening " << dir << endl;
+      return errno;
     }
 
     while ((dirp = readdir(dp)) != NULL) {

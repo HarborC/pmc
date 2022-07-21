@@ -106,7 +106,7 @@ int pmc_heu::search_bounds(pmc_graph& G,
             C = X; P = T;
         }
     }
-    cout << "[pmc heuristic]\t mc = " << mc <<endl;
+    // cout << "[pmc heuristic]\t mc = " << mc <<endl;
     return mc;
 }
 
@@ -170,7 +170,7 @@ int pmc_heu::search_cores(pmc_graph& G, vector<int>& C_max, int lb) {
         C = X; P = T;
     }
     C.clear();
-    cout << "[search_cores]\t mc = " << mc <<endl;
+    // cout << "[search_cores]\t mc = " << mc <<endl;
     return mc;
 }
 
@@ -181,8 +181,8 @@ int pmc_heu::search(pmc_graph& G, vector<int>& C_max) {
 
 
 inline void pmc_heu::print_info(vector<int> C_max) {
-    cout << "*** [pmc heuristic: thread " << omp_get_thread_num() + 1;
-    cout << "]   current max clique = " << C_max.size();
-    cout << ",  time = " << get_time() - sec << " sec" <<endl;
+  // cout << "*** [pmc heuristic: thread " << omp_get_thread_num() + 1;
+  // cout << "]   current max clique = " << C_max.size();
+  // cout << ",  time = " << get_time() - sec << " sec" <<endl;
 }
 

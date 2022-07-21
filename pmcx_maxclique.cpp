@@ -54,7 +54,7 @@ int pmcx_maxclique::search(pmc_graph& G, vector<int>& sol) {
     vector<Vertex> V;
     V.reserve(G.num_vertices());
     G.order_vertices(V,G,lb_idx,lb,vertex_ordering,decr_order);
-    cout << "|V| = " << V.size() <<endl;
+    // cout << "|V| = " << V.size() <<endl;
 
     vector<short> ind(G.num_vertices(),0);
     vector<int> es = G.get_edges_array();
@@ -154,7 +154,8 @@ void pmcx_maxclique::branch(
                         print_mc_info(C,sec);
                         if (mc >= param_ub) {
                             not_reached_ub = false;
-                            cout << "[pmc: upper bound reached]  omega = " << mc <<endl;
+                            // cout << "[pmc: upper bound reached]  omega = " <<
+                            // mc <<endl;
                         }
                     }
                 }
@@ -208,7 +209,7 @@ int pmcx_maxclique::search_dense(pmc_graph& G, vector<int>& sol) {
     vector<Vertex> V;
     V.reserve(G.num_vertices());
     G.order_vertices(V,G,lb_idx,lb,vertex_ordering,decr_order);
-    cout << "|V| = " << V.size() <<endl;
+    // cout << "|V| = " << V.size() <<endl;
 
     vector<short> ind(G.num_vertices(),0);
     vector<int> es = G.get_edges_array();
@@ -221,43 +222,45 @@ int pmcx_maxclique::search_dense(pmc_graph& G, vector<int>& sol) {
     #pragma omp parallel for schedule(dynamic) shared(pruned, G, adj, T, V, mc, C_max, induce_time) \
         firstprivate(colors,ind,vs,es) private(u, P, C) num_threads(num_threads)
     for (i = 0; i < (V.size()) - (mc-1); ++i) {
-        cout << "DEBUG current mc: " << mc << std::endl;
-        if (not_reached_ub) {
-            if (G.time_left(C_max,sec,time_limit,time_expired_msg)) {
+      // cout << "DEBUG current mc: " << mc << std::endl;
+      if (not_reached_ub) {
+        if (G.time_left(C_max, sec, time_limit, time_expired_msg)) {
 
-                u = V[i].get_id();
-                if ((*bound)[u] > mc) {
-                    P.push_back(V[i]);
-                    for (long long j = vs[u]; j < vs[u + 1]; ++j)
-                        if (!pruned[es[j]])
-                            if ((*bound)[es[j]] > mc)
-                            	P.push_back(Vertex(es[j], (vs[es[j]+1] - vs[es[j]]) )); /// local
+          u = V[i].get_id();
+          if ((*bound)[u] > mc) {
+            P.push_back(V[i]);
+            for (long long j = vs[u]; j < vs[u + 1]; ++j)
+              if (!pruned[es[j]])
+                if ((*bound)[es[j]] > mc)
+                  P.push_back(
+                      Vertex(es[j], (vs[es[j] + 1] - vs[es[j]]))); /// local
 
-                    if (P.size() > mc) {
-                        // neighborhood core ordering and pruning
-                        neigh_cores_bound(vs,es,P,ind,mc);
-                        if (P.size() > mc && P[0].get_bound() >= mc) {
-                            neigh_coloring_dense(vs,es,P,ind,C,C_max,colors,mc, adj);
-                            if (P.back().get_bound() > mc) {
-                                branch_dense(vs,es,P, ind, C, C_max, colors, pruned, mc, adj);
-                            }
-                        }
-                    }
-                    P = T;
+            if (P.size() > mc) {
+              // neighborhood core ordering and pruning
+              neigh_cores_bound(vs, es, P, ind, mc);
+              if (P.size() > mc && P[0].get_bound() >= mc) {
+                neigh_coloring_dense(vs, es, P, ind, C, C_max, colors, mc, adj);
+                if (P.back().get_bound() > mc) {
+                  branch_dense(vs, es, P, ind, C, C_max, colors, pruned, mc,
+                               adj);
                 }
-                pruned[u] = 1;
-                for (long long j = vs[u]; j < vs[u + 1]; j++) {
-                    adj[u][es[j]] = false;
-                    adj[es[j]][u] = false;
-                }
-
-                // dynamically reduce graph in a thread-safe manner
-                if ((get_time() - induce_time[omp_get_thread_num()]) > wait_time) {
-                    G.reduce_graph( vs, es, pruned, G, i+lb_idx, mc);
-                    G.graph_stats(G, mc, i+lb_idx, sec);
-                    induce_time[omp_get_thread_num()] = get_time();
-                }
+              }
             }
+            P = T;
+          }
+          pruned[u] = 1;
+          for (long long j = vs[u]; j < vs[u + 1]; j++) {
+            adj[u][es[j]] = false;
+            adj[es[j]][u] = false;
+          }
+
+          // dynamically reduce graph in a thread-safe manner
+          if ((get_time() - induce_time[omp_get_thread_num()]) > wait_time) {
+            G.reduce_graph(vs, es, pruned, G, i + lb_idx, mc);
+            G.graph_stats(G, mc, i + lb_idx, sec);
+            induce_time[omp_get_thread_num()] = get_time();
+          }
+        }
         }
     }
 
@@ -312,7 +315,8 @@ void pmcx_maxclique::branch_dense(
                         print_mc_info(C,sec);
                         if (mc >= param_ub) {
                             not_reached_ub = false;
-                            cout << "[pmc: upper bound reached]  omega = " << mc <<endl;
+                            // cout << "[pmc: upper bound reached]  omega = " <<
+                            // mc <<endl;
                         }
                     }
                 }

@@ -66,19 +66,19 @@ void pmc_graph::read_graph(const string& filename) {
     else if (ext == "gr")
         read_metis(filename);
     else {
-        cout << "Unsupported graph format." <<endl;
-        return;
+      // cout << "Unsupported graph format." <<endl;
+      return;
     }
     basic_stats(sec);
 }
 
 void pmc_graph::basic_stats(double sec) {
-    cout << "Reading time " << get_time() - sec << endl;
-    cout << "|V|: " << num_vertices() <<endl;
-    cout << "|E|: " << num_edges() <<endl;
-    cout << "p: " << density() <<endl;
-    cout << "d_max: " << get_max_degree() <<endl;
-    cout << "d_avg: " << get_avg_degree() <<endl;
+  // cout << "Reading time " << get_time() - sec << endl;
+  // cout << "|V|: " << num_vertices() <<endl;
+  // cout << "|E|: " << num_edges() <<endl;
+  // cout << "p: " << density() <<endl;
+  // cout << "d_max: " << get_max_degree() <<endl;
+  // cout << "d_avg: " << get_avg_degree() <<endl;
 }
 
 
@@ -89,44 +89,51 @@ void pmc_graph::read_edges(const string& filename) {
     int v = 0, u = 0, num_es = 0, self_edges = 0;
 
     ifstream in_check (filename.c_str());
-    if (!in_check) { cout << filename << "File not found!" <<endl; return; }
+    if (!in_check) {
+      // cout << filename << "File not found!" <<endl; return;
+    }
 
     bool fix_start_idx = true;
     while (!in_check.eof()) {
-        getline(in_check,line);
-        if (line[0] == '%' || line[0] == '#') continue;
-        if (line != "") {
-            in_stream.clear();
-            in_stream.str(line);
-            in_stream >> v >> u;
-            if (v == 0 || u == 0) {
-                fix_start_idx = false;
-                break;
-            }
+      getline(in_check, line);
+      if (line[0] == '%' || line[0] == '#')
+        continue;
+      if (line != "") {
+        in_stream.clear();
+        in_stream.str(line);
+        in_stream >> v >> u;
+        if (v == 0 || u == 0) {
+          fix_start_idx = false;
+          break;
         }
+      }
     }
     ifstream in (filename.c_str());
-    if (!in) { cout << filename << "File not found!" <<endl; return; }
+    if (!in) {
+      // cout << filename << "File not found!" <<endl; return;
+    }
 
     while (!in.eof()) {
-        getline(in,line);
-        if (line[0] == '%' || line[0] == '#') continue;
-        num_es++;
-        if (line != "") {
-            in_stream.clear();
-            in_stream.str(line);
-            in_stream >> v >> u;
+      getline(in, line);
+      if (line[0] == '%' || line[0] == '#')
+        continue;
+      num_es++;
+      if (line != "") {
+        in_stream.clear();
+        in_stream.str(line);
+        in_stream >> v >> u;
 
-            if (fix_start_idx) {
-                v--;
-                u--;
-            }
-            if (v == u)  self_edges++;
-            else {
-                vert_list[v].push_back(u);
-                vert_list[u].push_back(v);
-            }
+        if (fix_start_idx) {
+          v--;
+          u--;
         }
+        if (v == u)
+          self_edges++;
+        else {
+          vert_list[v].push_back(u);
+          vert_list[u].push_back(v);
+        }
+      }
     }
     vertices.push_back(edges.size());
     for (int i=0; i < vert_list.size(); i++) {
@@ -135,7 +142,7 @@ void pmc_graph::read_edges(const string& filename) {
     }
     vert_list.clear();
     vertex_degrees();
-    cout << "self-loops: " << self_edges <<endl;
+    // cout << "self-loops: " << self_edges <<endl;
 }
 
 pmc_graph::pmc_graph(long long nedges, const int *ei, const int *ej, int offset) {
@@ -179,8 +186,8 @@ void pmc_graph::read_mtx(const string& filename) {
 
     ifstream in (filename.c_str());
     if(!in) {
-        cout<<filename<<" not Found!"<<endl;
-        return;
+      // cout<<filename<<" not Found!"<<endl;
+      return;
     }
 
     char data[LINE_LENGTH];
@@ -195,8 +202,8 @@ void pmc_graph::read_mtx(const string& filename) {
     getline(in, line);
     strcpy(data, line.c_str());
     if (sscanf(data, "%s %s %s %s %s", banner, mtx, crd, data_type, storage_scheme) != 5) {
-        cout << "ERROR: mtx header is missing" << endl;
-        return;
+      // cout << "ERROR: mtx header is missing" << endl;
+      return;
     }
 
     for (p=data_type; *p!='\0'; *p=tolower(*p),p++);
@@ -209,8 +216,8 @@ void pmc_graph::read_mtx(const string& filename) {
     in2 >> row >> col >> num_of_entries;
 
     if(row!=col) {
-        cout<<"* ERROR: This is not a square matrix."<<endl;
-        return;
+      // cout<<"* ERROR: This is not a square matrix."<<endl;
+      return;
     }
 
     while(!in.eof() && entry_counter<num_of_entries) {
@@ -224,9 +231,16 @@ void pmc_graph::read_mtx(const string& filename) {
             ridx--;
             cidx--;
 
-            if (ridx < 0 || ridx >= row)  cout << "sym-mtx error: " << ridx << " row " << row << endl;
-            if (cidx < 0 || cidx >= col)  cout << "sym-mtx error: " << cidx << " col " << col << endl;
-            if (ridx == cidx)  continue;
+            if (ridx < 0 || ridx >= row) {
+              // cout << "sym-mtx error: " << ridx <<
+              // " row " << row << endl;
+            }
+            if (cidx < 0 || cidx >= col) {
+              // cout << "sym-mtx error: " << cidx
+              // << " col " << col << endl;
+            }
+            if (ridx == cidx)
+              continue;
 
             if (ridx > cidx) {
                 if (b_getValue) {
@@ -252,8 +266,8 @@ void pmc_graph::read_mtx(const string& filename) {
                     valueList[cidx].push_back(value);
                 }
             } else {
-                cout << "* WARNING: Found a nonzero in the upper triangular. ";
-                break;
+              // cout << "* WARNING: Found a nonzero in the upper triangular. ";
+              break;
             }
         }
     }
@@ -282,7 +296,8 @@ void pmc_graph::create_adj() {
         for (long long j = vertices[i]; j < vertices[i + 1]; j++ )
             adj[i][edges[j]] = true;
     }
-    cout << "Created adjacency matrix in " << get_time() - sec << " seconds" <<endl;
+    // cout << "Created adjacency matrix in " << get_time() - sec << " seconds"
+    // <<endl;
 }
 
 
@@ -294,7 +309,7 @@ void pmc_graph::sum_vertex_degrees() {
         degree[v] = vertices[v+1] - vertices[v];
         sum += (degree[v] * degree[v]-1) / 2;
     }
-    cout << "sum of degrees: " << sum <<endl;
+    // cout << "sum of degrees: " << sum <<endl;
 }
 
 void pmc_graph::vertex_degrees() {
@@ -355,7 +370,7 @@ void pmc_graph::update_degrees(int* &pruned, int& mc) {
         }
     }
     avg_degree = (double)edges.size() / p;
-    cout << ", pruned: " << p << endl;
+    // cout << ", pruned: " << p << endl;
 }
 
 
@@ -427,7 +442,7 @@ void pmc_graph::update_kcores(int* &pruned) {
         }
         else kcore[v] = 0;
     }
-    cout << "[pmc: updated cores]  K: " << max_core <<endl;
+    // cout << "[pmc: updated cores]  K: " << max_core <<endl;
 
     bin.clear();
     pos_tmp.clear();
@@ -500,16 +515,16 @@ void pmc_graph::reduce_graph(
 
 
 void pmc_graph::bound_stats(int alg, int lb, pmc_graph& G) {
-    cout << "graph: " << fn <<endl;
-    cout << "alg: " << alg <<endl;
-    cout << "-------------------------------" <<endl;
-    cout << "Graph Stats for Max-Clique:" <<endl;
-    cout << "-------------------------------" <<endl;
-    cout << "|V|: " << num_vertices() <<endl;
-    cout << "|E|: " << num_edges() <<endl;
-    cout << "d_max: " << get_max_degree() <<endl;
-    cout << "d_avg: " << get_avg_degree() <<endl;
-    cout << "p: " << density() <<endl;
+  // cout << "graph: " << fn <<endl;
+  // cout << "alg: " << alg <<endl;
+  // cout << "-------------------------------" <<endl;
+  // cout << "Graph Stats for Max-Clique:" <<endl;
+  // cout << "-------------------------------" <<endl;
+  // cout << "|V|: " << num_vertices() <<endl;
+  // cout << "|E|: " << num_edges() <<endl;
+  // cout << "d_max: " << get_max_degree() <<endl;
+  // cout << "d_avg: " << get_avg_degree() <<endl;
+  // cout << "p: " << density() <<endl;
 }
 
 
@@ -608,8 +623,8 @@ void pmc_graph::degree_bucket_sort(bool desc) {
         }
     }
 
-    cout << "[pmc: sorting neighbors]  |E| = " << edges.size();
-    cout << ", |E_sorted| = " << tmp_edges.size() <<endl;
+    // cout << "[pmc: sorting neighbors]  |E| = " << edges.size();
+    // cout << ", |E_sorted| = " << tmp_edges.size() <<endl;
     edges = tmp_edges;
 }
 

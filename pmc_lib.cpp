@@ -34,14 +34,16 @@ int max_clique(long long nedges, int *ei, int *ej, int index_offset,
     //! ensure wait time is greater than the time to recompute the graph data structures
     if (G.num_edges() > 1000000000 && in.remove_time < 120)  in.remove_time = 120;
     else if (G.num_edges() > 250000000 && in.remove_time < 10) in.remove_time = 10;
-    cout << "explicit reduce is set to " << in.remove_time << " seconds" <<endl;
-    
+    // cout << "explicit reduce is set to " << in.remove_time << " seconds"
+    // <<endl;
+
     double seconds = get_time();
     G.compute_cores();
     if (in.ub == 0) {
         in.ub = G.get_max_core() + 1;
-        cout << "K: " << in.ub <<endl;
-        cout << "k-cores time: " << get_time() - seconds << ", ub: " << in.ub << endl;
+        // cout << "K: " << in.ub <<endl;
+        // cout << "k-cores time: " << get_time() - seconds << ", ub: " << in.ub
+        // << endl;
     }
     
     //! lower-bound of max clique
@@ -49,15 +51,15 @@ int max_clique(long long nedges, int *ei, int *ej, int index_offset,
     if (in.lb == 0 && in.heu_strat != "0") { // skip if given as input
         pmc_heu maxclique(G,in);
         in.lb = maxclique.search(G, C);
-        cout << "Heuristic found clique of size " << in.lb;
-        cout << " in " << get_time() - seconds << " seconds" <<endl;
-        cout << "[pmc: heuristic]  ";
+        // cout << "Heuristic found clique of size " << in.lb;
+        // cout << " in " << get_time() - seconds << " seconds" <<endl;
+        // cout << "[pmc: heuristic]  ";
         print_max_clique(C);
     }
 
     //! check solution found by heuristic
     if (in.lb == in.ub && !in.MCE) {
-        cout << "Heuristic found optimal solution." << endl;
+      // cout << "Heuristic found optimal solution." << endl;
     }
     else if (in.algorithm >= 0) {
         switch(in.algorithm) {
@@ -96,12 +98,12 @@ int max_clique(long long nedges, int *ei, int *ej, int index_offset,
                 break;
             }
             default:
-                cout << "algorithm " << in.algorithm << " not found." <<endl;
-                break;
+              // cout << "algorithm " << in.algorithm << " not found." <<endl;
+              break;
         }
         seconds = (get_time() - seconds);
-        cout << "Time taken: " << seconds << " SEC" << endl;
-        cout << "Size (omega): " << C.size() << endl;
+        // cout << "Time taken: " << seconds << " SEC" << endl;
+        // cout << "Size (omega): " << C.size() << endl;
         print_max_clique(C);
     }
     

@@ -179,12 +179,13 @@ class input {
             }
             fclose(fin);
 
-            cout << "\n\nFile Name ------------------------ " << graph.c_str() << endl;
+            // cout << "\n\nFile Name ------------------------ " <<
+            // graph.c_str() << endl;
             if (!fexists(graph.c_str()) ) {
-                cout << "File not found!" << endl;
-                return;
+              // cout << "File not found!" << endl;
+              return;
             }
-            cout << "workers: " << threads <<endl;
+            // cout << "workers: " << threads <<endl;
             omp_set_num_threads(threads);
         }
 
